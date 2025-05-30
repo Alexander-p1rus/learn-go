@@ -70,7 +70,6 @@ func getCurrencyName(startCurrency string) string {
 		isRub := strings.ToLower(currency) == "rub"
 
 		if !(isUsd || isEur || isRub) {
-			fmt.Println(!isUsd || !isEur)
 			fmt.Println("Введите корректную валюту из перечисленных")
 			continue
 		}
