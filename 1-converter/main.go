@@ -42,7 +42,7 @@ func convertValueByValuteName(value float64, curr string, target string) float64
 		}
 	}
 
-	return 1337
+	return 0
 }
 
 func getInputData() (float64, string, string) {
