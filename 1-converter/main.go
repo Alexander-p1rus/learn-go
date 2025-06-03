@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+type CurrencyMap = map[string]map[string]float64
+
 func main() {
 
 	countValue, startCurrency, targetCurreny := getInputData()
@@ -16,7 +18,7 @@ func main() {
 
 func convertValueByValuteName(value float64, curr string, target string) float64 {
 
-	mapRation := map[string]map[string]float64{
+	mapRation := CurrencyMap{
 		"eur": {"usd": 1.14, "rub": 90.5},
 		"usd": {"eur": 0.88, "rub": 79.25},
 		"rub": {"usd": 0.013, "eur": 0.011},

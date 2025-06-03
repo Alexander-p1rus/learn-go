@@ -8,33 +8,32 @@ import (
 )
 
 func main() {
-	TypesOperation := [3]string{"AVG", "SUM", "MED"}
 
-	opertaionType := inputOperationType(TypesOperation[:])
+	opertaionType := getCliType()
 	valueList := getOperationValue()
-
-	result := calculateByOperation(opertaionType, valueList)
+	result := calculateByOperation(opertaionType , &valueList)
 	fmt.Printf("result: %v\n", result)
 }
 
-func inputOperationType(types []string) string {
-	fmt.Println("введите тип операции:AVG/SUM/MED")
+func getCliType() string {
+
+	cliOptions := [3]string{"AVG", "SUM", "MED"}
 	var inputType string
 
-Input:
+	fmt.Println("введите тип операции:AVG/SUM/MED")
+
 	for {
 		fmt.Scanln(&inputType)
 
-		for _, value := range types {
+		for _, value := range cliOptions {
 			if value == strings.ToUpper(inputType) {
-				break Input
+				return strings.ToUpper(inputType)
 			}
 		}
 
 		fmt.Println("Введите корректное название операции")
 	}
 
-	return strings.ToUpper(inputType)
 }
 
 func getOperationValue() []string {
@@ -46,8 +45,8 @@ func getOperationValue() []string {
 
 }
 
-func calculateByOperation(typeOp string, valueL []string) float64 {
-
+func calculateByOperation(typeOp string, valueL *[]string) float64 {
+	fmt.Printf("valueL: %v\n", valueL)
 	switch typeOp {
 	case "AVG":
 		return calcAvarage(valueL)
@@ -60,9 +59,10 @@ func calculateByOperation(typeOp string, valueL []string) float64 {
 	return 0
 }
 
-func calcAvarage(List []string) float64 {
+func calcAvarage(List *[]string) float64 {
+	
 	var total int
-	for _, value := range List {
+	for _, value := range *List {
 		parseValue, err := strconv.Atoi(value)
 		if err != nil {
 			fmt.Println("что-то пошло не так")
@@ -71,14 +71,14 @@ func calcAvarage(List []string) float64 {
 		total += int(parseValue)
 	}
 
-	return float64(total) / float64(len(List))
+	return float64(total) / float64(len(*List))
 
 }
 
-func calcSum(List []string) float64 {
+func calcSum(List *[]string) float64 {
 	sum := 0
 
-	for _, listValue := range List {
+	for _, listValue := range *List {
 		number, err := strconv.Atoi(listValue)
 		if err != nil {
 			fmt.Println("Парсинг в тип данных Int не удался")
@@ -90,10 +90,10 @@ func calcSum(List []string) float64 {
 
 }
 
-func calcMediana(List []string) float64 {
-	newArr := make([]int, 0, cap(List))
+func calcMediana(List *[]string) float64 {
+	newArr := make([]int, 0, cap(*List))
 
-	for _, value := range List {
+	for _, value := range *List {
 		valueToInt, _ := strconv.Atoi(value)
 		newArr = append(newArr, valueToInt)
 	}
@@ -101,9 +101,9 @@ func calcMediana(List []string) float64 {
 	sort.Ints(newArr)
 
 	if len(newArr)%2 == 0 {
-		num1:= float64(newArr[(len(newArr)-1)/2])
-		num2:= float64(newArr[len(newArr)/2])
-		return (num1+num2)/2
+		num1 := float64(newArr[(len(newArr)-1)/2])
+		num2 := float64(newArr[len(newArr)/2])
+		return (num1 + num2) / 2
 
 	} else {
 		return float64(newArr[(len(newArr)-1)/2])
