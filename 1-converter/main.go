@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+type CurrencyMap = map[string]map[string]float64
+
 func main() {
 
 	countValue, startCurrency, targetCurreny := getInputData()
@@ -16,33 +18,13 @@ func main() {
 
 func convertValueByValuteName(value float64, curr string, target string) float64 {
 
-	const UsdToEurRatio = 0.88
-	const UsdToRubRatio = 80.25
-	const RubToEurRatio = 0.011
-
-	switch curr {
-	case "rub":
-		if target == "eur" {
-			return value * RubToEurRatio
-		} else if target == "usd" {
-			return value / UsdToRubRatio
-		}
-
-	case "eur":
-		if target == "usd" {
-			return value / UsdToEurRatio
-		} else if target == "rub" {
-			return value / RubToEurRatio
-		}
-	case "usd":
-		if target == "rub" {
-			return value * UsdToRubRatio
-		} else if target == "eur" {
-			return value * UsdToEurRatio
-		}
+	mapRation := CurrencyMap{
+		"eur": {"usd": 1.14, "rub": 90.5},
+		"usd": {"eur": 0.88, "rub": 79.25},
+		"rub": {"usd": 0.013, "eur": 0.011},
 	}
 
-	return 0
+	return mapRation[curr][target] * value
 }
 
 func getInputData() (float64, string, string) {
