@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"demo/app-1/3-struct/bins"
+	"os-test/bins"
+	"os-test/files"
+	"os-test/storage"
 )
 
 func main() {
@@ -15,6 +17,8 @@ func main() {
 		panic(err)
 	}
 
-	fmt.Printf("(*bin): %v\n", bin)
+	storage.SaveStorage("test.json", bin)
 
+	bytes, _ := files.ReadFile("test.json")
+	fmt.Printf("bytes: %v\n", string(bytes))
 }
