@@ -2,7 +2,6 @@ package files
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 )
@@ -17,7 +16,7 @@ func ReadFile(fileName string) ([]byte, error) {
 	data, err := os.ReadFile(fileName)
 
 	if err != nil {
-		fmt.Println("не удалось прочесть файл")
+		return nil, errors.New("не удалось прочесть файл")
 	}
 
 	return data	, nil

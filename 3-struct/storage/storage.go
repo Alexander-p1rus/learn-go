@@ -2,19 +2,23 @@ package storage
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 
 	"os-test/bins"
 )
 
-func SaveStorage(fileName string, b *bins.Bin) {
-	binsList := ReadFile(fileName)
+func SaveStorage(fileName string, b *bins.Bin) error{
+	binsList, err := ReadFile(fileName)
 
+	if err != nil {
+		return err
+	}
 	file, err := os.Create("test.json")
 
 	if err != nil {
-		fmt.Println("не удалость открыть файл")
+		return errors.New("не удалось создать файл")
 	} 
 
 	defer file.Close()
@@ -24,24 +28,24 @@ func SaveStorage(fileName string, b *bins.Bin) {
 	_, err = file.WriteString(string(binsList.ToBytes()))
 
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
 
+	return nil
 }
 
-func ReadFile(fileName string) *bins.BinList {
+func ReadFile(fileName string) (*bins.BinList , error) {
 	binsList := bins.BinList{Bins: []bins.Bin{}}
 	strBytes, err := os.ReadFile(fileName)
 
 	if err != nil {
-		fmt.Println("не удалост прочеть файл")
+		return nil,errors.New("не удалось прочесть файл")
 	}
 
 	err = json.Unmarshal(strBytes, &binsList)
 
 	if err != nil {
-		fmt.Println("не удалось заэнкодить")
+		return nil , errors.New("не удалость считать json файл")
 	}
 
-	return &binsList
-}
+	return &binsList, nil}

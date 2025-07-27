@@ -14,11 +14,16 @@ func main() {
 	bin, err := bins.СreateBin("222", true, time.Now(), "hello")
 
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
 	}
 
 	storage.SaveStorage("test.json", bin)
 
-	bytes, _ := files.ReadFile("test.json")
-	fmt.Printf("bytes: %v\n", string(bytes))
+	file, err := files.ReadFile("test.json")
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	fmt.Printf("file: %v\n", string(file))
+
 }
