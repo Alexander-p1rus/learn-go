@@ -19,7 +19,7 @@ func ReadFile(fileName string) ([]byte, error) {
 		return nil, errors.New("не удалось прочесть файл")
 	}
 
-	return data	, nil
+	return data, nil
 
 }
 

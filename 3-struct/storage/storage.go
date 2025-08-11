@@ -3,49 +3,57 @@ package storage
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
 
 	"os-test/bins"
 )
 
-func SaveStorage(fileName string, b *bins.Bin) error{
-	binsList, err := ReadFile(fileName)
+func SaveStorage(fileName string, b *bins.Bin) error {
 
+	file, err := os.Open(fileName)
+
+	if err != nil {
+		file, err = os.Create(fileName)
+		if err != nil {
+			return errors.New("не удалось создать файл")
+		}
+
+	}
+
+	binsList, err := ReadFile(fileName)
 	if err != nil {
 		return err
 	}
-	file, err := os.Create("test.json")
 
+	binsList.AddBin(b)
+
+	err = os.WriteFile(fileName, binsList.ToBytes(), 0644)
 	if err != nil {
-		return errors.New("не удалось создать файл")
-	} 
+		return err
+	}
 
 	defer file.Close()
-	binsList.AddBin(*b)
-	fmt.Printf("binsList: %v\n", binsList.Bins)
-
-	_, err = file.WriteString(string(binsList.ToBytes()))
-
-	if err != nil {
-		return err
-	}
 
 	return nil
 }
 
-func ReadFile(fileName string) (*bins.BinList , error) {
+func ReadFile(fileName string) (*bins.BinList, error) {
 	binsList := bins.BinList{Bins: []bins.Bin{}}
 	strBytes, err := os.ReadFile(fileName)
 
 	if err != nil {
-		return nil,errors.New("не удалось прочесть файл")
+		return nil, errors.New("не удалось прочесть файл")
+	}
+
+	if len(strBytes) == 0 {
+		return &binsList, nil
 	}
 
 	err = json.Unmarshal(strBytes, &binsList)
 
 	if err != nil {
-		return nil , errors.New("не удалость считать json файл")
+		return nil, errors.New("не удалость считать json файл")
 	}
 
-	return &binsList, nil}
+	return &binsList, nil
+}
