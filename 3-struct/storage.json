@@ -1,0 +1,16 @@
+{
+    "bins": [
+        {
+            "id": "222",
+            "private": true,
+            "createdAt": "2025-08-26T21:01:49.718769808+03:00",
+            "name": "hello"
+        },
+        {
+            "id": "222",
+            "private": true,
+            "createdAt": "2025-08-26T21:01:54.830600217+03:00",
+            "name": "hello"
+        }
+    ]
+}

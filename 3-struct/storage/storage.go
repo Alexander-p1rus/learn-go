@@ -8,8 +8,12 @@ import (
 	"os-test/bins"
 )
 
-func Save(fileName string, bl *bins.BinList) error {
-	err := os.WriteFile(fileName, bl.ToBytes(), 0644)
+type Storage struct {
+	filename string
+}
+
+func (s *Storage) Save(data []byte) error {
+	err := os.WriteFile(s.filename, data, 0644)
 	if err != nil {
 		return err
 	}
@@ -17,26 +21,39 @@ func Save(fileName string, bl *bins.BinList) error {
 	return nil
 }
 
-func Read(fileName string) (*bins.BinList, error) {
-	binsList := bins.BinList{Bins: []bins.Bin{}}
-
-	strBytes, err := os.ReadFile(fileName)
-
+func (s *Storage) Read(bl bins.BinList) (bins.BinList, error) {
+	strBytes, err := os.ReadFile(s.filename)
 	if err != nil {
-		file, err := os.Create(fileName)
+		return bl, errors.New("не удалось открыть файл")
+	}
+
+	if len(strBytes) == 0 {
+		return bl, nil
+	}
+
+	err = json.Unmarshal(strBytes, &bl)
+	if err != nil {
+		return bl, errors.New("не удалость считать json файл")
+	}
+
+	return bl, nil
+}
+
+func CreateStorage(filename string) (*Storage, error) {
+	storage := &Storage{
+		filename: filename,
+	}
+
+	_, err := os.ReadFile(storage.filename)
+	if err != nil {
+		file, err := os.Create(storage.filename)
 		if err != nil {
 			return nil, err
 		}
 
-		file.Close()
+		defer file.Close()
 
-		return &binsList, nil
 	}
 
-	err = json.Unmarshal(strBytes, &binsList)
-	if err != nil {
-		return nil, errors.New("не удалость считать json файл")
-	}
-
-	return &binsList, nil
+	return storage, nil
 }
