@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"os-test/bins"
-	"os-test/files"
 	"os-test/storage"
 )
 
@@ -17,13 +16,22 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
-	storage.SaveStorage("test.json", bin)
-
-	file, err := files.ReadFile("test.json")
+	storage, err := storage.CreateStorage("storage.json")
 	if err != nil {
 		fmt.Println(err.Error())
+
 	}
 
-	fmt.Printf("file: %v\n", string(file))
+	bl, err := storage.Read(bins.BinList{})
+	if err != nil {
+		return
+	}
+
+	bl.AddBin(bin)
+
+	err = storage.Save(bl.ToBytes())
+	if err != nil {
+		fmt.Printf("err: %v\n", err.Error())
+	}
 
 }
